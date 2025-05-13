@@ -81,11 +81,30 @@ document.getElementById('pixForm').addEventListener('submit', async (e) => {
       const result = await res.json();
       if (result.success) {
         let countdown = 300;
+    let pagoConfirmado = false;
     const txId = result.transactionId;
+
+    const interval = setInterval(() => {
+      if (pagoConfirmado) return;
+      if (countdown <= 0) {
+        clearInterval(interval);
+        clearInterval(pollInterval);
+        document.getElementById('qrResult').innerHTML = '<p class="text-warning">⚠️ El código QR ha expirado.</p>';
+      } else {
+        const minutes = Math.floor(countdown / 60);
+        const seconds = countdown % 60;
+        document.getElementById('countdown').innerText =
+          `Tiempo restante: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        countdown--;
+      }
+    }, 1000);
+
     const pollInterval = setInterval(async () => {
+      if (pagoConfirmado) return;
       const paid = await fetch('/api/paid').then(r => r.json());
       const match = paid.find(p => p.id === txId);
       if (match) {
+        pagoConfirmado = true;
         clearInterval(interval);
         clearInterval(pollInterval);
         document.getElementById('qrResult').innerHTML = `
