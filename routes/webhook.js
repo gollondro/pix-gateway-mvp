@@ -5,31 +5,24 @@ const router = express.Router();
 
 router.post('/', express.json(), (req, res) => {
   console.log('📬 Webhook recibido:', req.body);
+  const { transactionId, status } = req.body;
 
-  const pagosFile = path.join(__dirname, '../db/pagos.json');
-  const nuevoPago = {
-    ...req.body,
-    timestamp: new Date().toISOString()
-  };
+  const pendingPath = path.join(__dirname, '../db/pending.json');
+  const paidPath = path.join(__dirname, '../db/paid.json');
 
-  // Leer archivo actual o iniciar con array vacío
-  let historial = [];
-  if (fs.existsSync(pagosFile)) {
-    try {
-      const contenido = fs.readFileSync(pagosFile, 'utf-8');
-      historial = JSON.parse(contenido);
-    } catch (error) {
-      console.error('❌ Error leyendo pagos.json:', error);
-    }
-  }
+  let pending = fs.existsSync(pendingPath) ? JSON.parse(fs.readFileSync(pendingPath)) : [];
+  const paid = fs.existsSync(paidPath) ? JSON.parse(fs.readFileSync(paidPath)) : [];
 
-  historial.push(nuevoPago);
+  const idx = pending.findIndex(p => p.id === transactionId);
+  if (idx !== -1 && status === 'PAID') {
+    const record = pending.splice(idx, 1)[0];
+    record.status = 'PAGADA';
+    record.paid_at = new Date().toISOString();
+    paid.push(record);
 
-  try {
-    fs.writeFileSync(pagosFile, JSON.stringify(historial, null, 2));
-    console.log('✅ Pago registrado en pagos.json');
-  } catch (error) {
-    console.error('❌ Error guardando pago:', error);
+    fs.writeFileSync(pendingPath, JSON.stringify(pending, null, 2));
+    fs.writeFileSync(paidPath, JSON.stringify(paid, null, 2));
+    console.log('✅ Transacción marcada como pagada:', transactionId);
   }
 
   res.status(200).json({ received: true });
