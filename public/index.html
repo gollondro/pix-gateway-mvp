@@ -81,6 +81,23 @@ document.getElementById('pixForm').addEventListener('submit', async (e) => {
       const result = await res.json();
       if (result.success) {
         let countdown = 300;
+    const txId = result.transactionId;
+    const pollInterval = setInterval(async () => {
+      const paid = await fetch('/api/paid').then(r => r.json());
+      const match = paid.find(p => p.id === txId);
+      if (match) {
+        clearInterval(interval);
+        clearInterval(pollInterval);
+        document.getElementById('qrResult').innerHTML = `
+          <div class="alert alert-success"><strong>✅ Pago recibido</strong><br>
+            Monto pagado: USD ${match.amountUSD}<br>
+            Cliente: ${match.name}<br>
+            Fecha: ${new Date(match.paid_at).toLocaleString()}
+          </div>
+        `;
+      }
+    }, 10000);
+
         const interval = setInterval(() => {
           if (countdown <= 0) {
             clearInterval(interval);

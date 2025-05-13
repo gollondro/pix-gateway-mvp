@@ -30,10 +30,9 @@ router.post('/', async (req, res) => {
     fs.writeFileSync(pendingPath, JSON.stringify(pending, null, 2));
     console.log('📌 Guardado en pending.json:', controlNumber);
 
-    res.json({
+    res.json({ transactionId: controlNumber,
       success: true,
       qrData,
-	  transactionId: controlNumber, 
       amountUSD,
       rateCLPperUSD: rate,
       vetTax: qrData.vetTax,
