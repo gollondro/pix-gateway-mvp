@@ -7,7 +7,7 @@ const rendixApi = require('../services/rendixApi');
 
 router.post('/', async (req, res) => {
   const { amountCLP, customer } = req.body;
-  const rate = 880;
+  const rate = JSON.parse(fs.readFileSync(path.join(__dirname, '../db/rate.json'))).rate;
   const amountUSD = (amountCLP / rate).toFixed(2);
   const controlNumber = uuidv4();
 
