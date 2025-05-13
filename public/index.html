@@ -22,7 +22,7 @@
     <div class="row justify-content-center">
       <div class="col-lg-6 col-md-8">
         <div class="card shadow-sm border-0">
-          <div class="card-body">
+          <div class="card-body"><div class="text-end mt-2"><button id="logoutBtn" class="btn btn-outline-danger btn-sm">Cerrar sesión</button></div>
             <h4 class="card-title text-center mb-4 text-afex" id="formTitle">Generar cobro con PIX</h4>
             <form id="pixForm">
               <div class="mb-3"><label class="form-label">Monto en CLP</label><input type="number" class="form-control" id="amountCLP" required></div>
@@ -42,7 +42,16 @@
   <script>
     let session = { renpix_email: "afexlojista@teste.com", renpix_password: "Welcome@123456*", merchant_id: 3111 };
 
-    document.getElementById('pixForm').addEventListener('submit', async (e) => {
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+  session = null;
+  document.getElementById('pixForm').reset();
+  document.getElementById('pixForm').style.display = 'none';
+  document.getElementById('qrResult').innerHTML = '';
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('formTitle').innerText = 'Iniciar sesión';
+});
+
+document.getElementById('pixForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = e.submitter;
       btn.disabled = true;

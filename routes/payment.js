@@ -33,6 +33,7 @@ router.post('/', async (req, res) => {
     res.json({
       success: true,
       qrData,
+	  transactionId: controlNumber, 
       amountUSD,
       rateCLPperUSD: rate,
       vetTax: qrData.vetTax,
