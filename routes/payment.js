@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
+const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const rendixApi = require('../services/rendixApi');
 
@@ -13,8 +14,8 @@ router.post('/', async (req, res) => {
   try {
     const qrData = await rendixApi.createPixCharge({ amountUSD, customer, controlNumber });
 
-    const pendingFile = './db/pending.json';
-    const pending = fs.existsSync(pendingFile) ? JSON.parse(fs.readFileSync(pendingFile)) : [];
+    const pendingPath = path.join(__dirname, '../db/pending.json');
+    const pending = fs.existsSync(pendingPath) ? JSON.parse(fs.readFileSync(pendingPath)) : [];
     pending.push({
       id: controlNumber,
       email: customer.email,
@@ -26,7 +27,8 @@ router.post('/', async (req, res) => {
       date: new Date().toISOString(),
       status: "PENDIENTE"
     });
-    fs.writeFileSync(pendingFile, JSON.stringify(pending, null, 2));
+    fs.writeFileSync(pendingPath, JSON.stringify(pending, null, 2));
+    console.log('📌 Guardado en pending.json:', controlNumber);
 
     res.json({
       success: true,

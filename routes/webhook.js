@@ -23,6 +23,8 @@ router.post('/', express.json(), (req, res) => {
     fs.writeFileSync(pendingPath, JSON.stringify(pending, null, 2));
     fs.writeFileSync(paidPath, JSON.stringify(paid, null, 2));
     console.log('✅ Transacción marcada como pagada:', transactionId);
+  } else {
+    console.log('⚠️ No se encontró la transacción o estado no es PAID');
   }
 
   res.status(200).json({ received: true });
