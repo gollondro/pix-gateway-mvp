@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "id": "4cb8f7f2-dc29-4d03-bb6b-f82fdb4e9b45",
+    "email": "cliente@ejemplo.com",
+    "cpf": "12345678900",
+    "name": "Juan Pérez",
+    "phone": "+551199999999",
+    "amountCLP": 8800,
+    "amountUSD": "10.00",
+    "date": "2024-05-13T21:47:00.000Z",
+    "status": "PENDIENTE"
+  }
+]
