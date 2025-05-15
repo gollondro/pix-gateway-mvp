@@ -103,19 +103,7 @@
     document.getElementById('formTitle').innerText = 'Iniciar sesión';
   });
 
-  
-document.getElementById('cpf').addEventListener('blur', () => {
-  const cpf = document.getElementById('cpf').value;
-  if (!validarCPF(cpf)) {
-    alert("CPF inválido");
-    document.getElementById('cpf').classList.add('is-invalid');
-  } else {
-    document.getElementById('cpf').classList.remove('is-invalid');
-  }
-});
-
-document.getElementById('pixForm').addEventListener('submit', async (e) => {
-
+  document.getElementById('pixForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const cpf = document.getElementById('cpf').value;
     if (!validarCPF(cpf)) {
@@ -132,7 +120,7 @@ document.getElementById('pixForm').addEventListener('submit', async (e) => {
       customer: {
         name: document.getElementById('name').value,
         email: document.getElementById('emailCliente').value,
-        phone: document.getElementById('phone').value = "+5511";,
+        phone: document.getElementById('phone').value,
         cpf: cpf
       }
     };
